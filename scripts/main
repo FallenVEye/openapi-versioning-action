@@ -1,19 +1,8 @@
 #!/bin/bash
 
-echo "test"
-exit 0
-
-snapshot=false
-script_dir="$(cd "$(dirname -z "$0")" && pwd)"
-
-while [[ "$#" -gt 0 ]]; do
-    case $1 in
-        --spec*) spec_file="${1#*=}";;
-        --snapshot) snapshot=true;;
-        *) echo "Unknown argument"; exit 1;;
-    esac
-    shift
-done
+spec_file="${1}"
+snapshot="${2}"
+script_dir="$(cd "$(dirname "$0")" && pwd)"
 
 if [[ -z "$spec_file" ]]; then
     echo "Specification file not provided. Use --spec="

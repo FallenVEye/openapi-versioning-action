@@ -1,7 +1,7 @@
 #!/bin/bash
 
 snapshot=false
-script_dir="$(cd "$(dirname -z "$0")" && pwd)"
+script_dir="$(cd "$(dirname "$0")" && pwd)"
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in

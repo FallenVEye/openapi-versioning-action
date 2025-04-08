@@ -11,5 +11,7 @@ inputs:
     default: false
 runs:
   using: 'docker'
-  main: 'scripts/main'
-  
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.spec }}
+    - ${{ inputs.snapshot }}

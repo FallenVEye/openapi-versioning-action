@@ -1,0 +1,19 @@
+name: Test Action
+
+on:
+  push:
+    branches: [ "feature/**" ]
+
+jobs:
+  test-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Test
+        uses: FallenVEye/openapi-versioning-action@v0.0.1
+        with:
+          spec: ./spec.yaml
