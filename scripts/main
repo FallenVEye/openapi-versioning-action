@@ -1,0 +1,34 @@
+#!/bin/bash
+
+snapshot=false
+script_dir="$(cd "$(dirname -z "$0")" && pwd)"
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --spec*) spec_file="${1#*=}";;
+        --snapshot) snapshot=true;;
+        *) echo "Unknown argument"; exit 1;;
+    esac
+    shift
+done
+
+if [[ -z "$spec_file" ]]; then
+    echo "Specification file not provided. Use --spec="
+    exit 1
+fi
+if [[ ! -f "$spec_file" ]]; then
+    echo "Specification file not found at location: ${pwd}/${spec_file}"
+    exit 1
+fi
+
+
+new_version_strategy="$($script_dir/extract-new-version-changelog)" || exit 1
+
+if ! $snapshot; then
+    new_version="$($script_dir/openapi-update-version --version="${new_version_strategy}" --spec="${spec_file}")" || exit 1
+    $script_dir/update-changelog-version --version="${new_version}" || exit 1
+else
+    new_version="$($script_dir/openapi-update-version --version="${new_version_strategy}" --snapshot --spec="${spec_file}")" || exit 1 
+fi
+
+echo "${new_version}"

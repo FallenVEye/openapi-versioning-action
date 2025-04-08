@@ -1,0 +1,21 @@
+#!/bin/bash
+
+new_version_strategy="$(grep -Po "(?<=### new_version=)(major|minor|patch)$" ./changelog.md)"
+
+changelog=$(grep -Pzo "(?<=### new_version).*\n\K(.|\n)*(?=\n### new_version_end)" ./changelog.md)
+changelog=$(echo "${changelog}" | grep -Pzo "\S+")
+
+if [[ -z "$changelog" ]]; then
+    >&2 echo "Changelog is empty."
+    exit 1
+fi
+
+if [[ -z "$new_version_strategy" ]]; then
+    >&2 echo "Can't resolve new version strategy. See changelog.md"
+    >&2 echo "Should contain:"
+    >&2 echo -e "\t### new_version=major|minor|patch"
+    >&2 echo -e "\t### new_version_end"
+    exit 1
+fi
+
+echo "${new_version_strategy}"

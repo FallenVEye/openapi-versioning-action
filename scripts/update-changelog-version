@@ -1,0 +1,25 @@
+#!/bin/bash
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --version*) version="${1#*=}";;
+        *) echo "Unknown argument"; exit 1;;
+    esac
+    shift
+done
+
+# Extract changelog
+changelog=$(grep -Pzo "(?<=### new_version).*\n\K(.|\n)*(?=\n### new_version_end)" ./changelog.md)
+changelog="## ${version}\n${changelog}"
+
+# Remove changelog entry container
+sed -i -E "/### new_version/,/### new_version_end/d" ./changelog.md
+
+# Add new version change log
+sed -i  "1s/^/${changelog}\n/" ./changelog.md
+
+# Add container for future versions
+container="### new_version=major|minor|patch\n\n### new_version_end\n\n"
+sed -i "1s/^/${container}/" ./changelog.md
+
+exit 0

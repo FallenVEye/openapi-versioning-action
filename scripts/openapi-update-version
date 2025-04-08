@@ -1,0 +1,59 @@
+#!/bin/bash
+
+snapshot=false
+script_dir="$(cd "$(dirname -z "$0")" && pwd)"
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --spec*) spec_file="${1#*=}";;
+        --version*) 
+            case "${1#*=}" in 
+                major);& minor);& patch) version="${1#*=}";;
+                *) echo "Only major|minor|patch versions are valid. Provided: ${1#*=}"
+            esac;;
+        --snapshot) snapshot=true;;
+        *) echo "Unknown argument"; exit 1;;
+    esac
+    shift
+done
+
+if [[ -z "$spec_file" ]]; then
+    echo "Specification file not provided. Use --spec="
+    exit 1
+fi
+if [[ ! -f "$spec_file" ]]; then
+    echo "Specification file not found at location: ${pwd}/${spec_file}"
+    exit 1
+fi
+if [[ -z "$version" ]]; then
+    echo "New version strategy not provided. Use --version=major|minor|patch"
+    exit 1
+fi
+
+# Reading current version from specification file
+IFS='.' read -ra VER <<< `grep -Po "(?<=version: )\d+(\.(\d+))*" ${spec_file}`
+
+if [[ -z "$VER" ]]; then
+    echo "Version not found in spec file"
+    exit 1
+fi
+
+# Determening new version
+case $version in
+    major) new_version="$((VER[0]+1)).0.0";; 
+    minor) new_version="${VER[0]}.$((VER[1]+1)).0";; 
+    patch) new_version="${VER[0]}.${VER[1]}.$((VER[2]+1))";;
+esac
+
+# Add information about snapshot
+if $snapshot; then
+    branch="$($script_dir/branch-name)" || (>2& echo "can't determine new version" && exit 1)
+    time="$(date +"%d-%m-%H-%M")"
+    new_version="${new_version}-SNAPSHOT-${branch}-${time}"
+fi
+
+# Update version in specification file
+sed -i -E "s/version: [0-9]+(\.([0-9]+))*/version: ${new_version}/" "${spec_file}"
+
+# Return new version
+echo $new_version

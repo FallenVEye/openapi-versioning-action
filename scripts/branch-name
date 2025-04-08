@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Extract current branch name
+# feature/some/task-12 -> some-task-12
+git branch --show-current | grep -Po "(?<=feature/)[a-zA-z0-9-/]+" | sed -E "s#/#-#g"

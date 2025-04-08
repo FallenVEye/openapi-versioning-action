@@ -1,0 +1,15 @@
+name: 'OpenAPI Versioning Action'
+author: 'FallenVEye'
+description: 'A GitHub action for versioning openapi specification by changelog'
+inputs:
+  spec:
+    description: 'Path to OpenAPi specification file'
+    required: true
+  snapshot:
+    description: 'Should the new version be a snapshot'
+    required: false
+    default: false
+runs:
+  using: 'docker'
+  main: 'scripts/main'
+  
