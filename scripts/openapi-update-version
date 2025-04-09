@@ -1,21 +1,10 @@
 #!/bin/sh
 
-snapshot=false
 script_dir="$(cd "$(dirname "$0")" && pwd)"
 
-while [[ "$#" -gt 0 ]]; do
-    case $1 in
-        --spec*) spec_file="${1#*=}";;
-        --version*) 
-            case "${1#*=}" in 
-                major);& minor);& patch) version="${1#*=}";;
-                *) echo "Only major|minor|patch versions are valid. Provided: ${1#*=}"
-            esac;;
-        --snapshot) snapshot=true;;
-        *) echo "Unknown argument"; exit 1;;
-    esac
-    shift
-done
+spec_file=$INPUT_SPEC
+snapshot=$INPUT_SNAPSHOT
+version=$1
 
 if [[ -z "$spec_file" ]]; then
     echo "Specification file not provided. Use --spec="

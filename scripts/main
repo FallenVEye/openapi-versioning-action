@@ -17,10 +17,10 @@ fi
 new_version_strategy="$(sh $script_dir/extract-new-version-changelog)" || exit 1
 
 if ! $snapshot; then
-    new_version="$(sh $script_dir/openapi-update-version --version="${new_version_strategy}" --spec="${spec_file}")" || exit 1
-    $script_dir/update-changelog-version --version="${new_version}" || exit 1
+    new_version="$(sh $script_dir/openapi-update-version "${new_version_strategy}")" || exit 1
+    sh $script_dir/update-changelog-version "${new_version}" || exit 1
 else
-    new_version="$(sh $script_dir/openapi-update-version --version="${new_version_strategy}" --snapshot --spec="${spec_file}")" || exit 1 
+    new_version="$(sh $script_dir/openapi-update-version "${new_version_strategy}")" || exit 1 
 fi
 
 echo "${new_version}"
