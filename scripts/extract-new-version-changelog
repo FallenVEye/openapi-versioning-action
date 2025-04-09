@@ -1,9 +1,7 @@
 #!/bin/bash
 
-new_version_strategy="$(grep -Po "(?<=### new_version=)(major|minor|patch)$" ./changelog.md)"
-
-changelog=$(grep -Pzo "(?<=### new_version).*\n\K(.|\n)*(?=\n### new_version_end)" ./changelog.md)
-changelog=$(echo "${changelog}" | grep -Pzo "\S+")
+new_version_strategy=$(perl -ne 'print "$1" if m{### new_version=\K(major|minor|patch)$}' changelog.md)
+changelog=$(perl -0ne 'print $& if m{### new_version=(minor|major|patch)\n\K.*\S+.*\n(?=### new_version_end)}s' changelog.md)
 
 if [[ -z "$changelog" ]]; then
     >&2 echo "Changelog is empty."

@@ -1,15 +1,9 @@
 #!/bin/bash
 
-while [[ "$#" -gt 0 ]]; do
-    case $1 in
-        --version*) version="${1#*=}";;
-        *) echo "Unknown argument"; exit 1;;
-    esac
-    shift
-done
+version=$1
 
 # Extract changelog
-changelog=$(grep -Pzo "(?<=### new_version).*\n\K(.|\n)*(?=\n### new_version_end)" ./changelog.md)
+changelog=$(perl -0ne 'print $& if m{### new_version=(minor|major|patch)\n\K.*\S+.*\n(?=### new_version_end)}s' changelog.md)
 changelog="## ${version}\n${changelog}"
 
 # Remove changelog entry container
