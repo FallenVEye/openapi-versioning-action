@@ -2,6 +2,6 @@ FROM alpine:latest
 
 COPY scripts/ scripts/
 
-apt add perl
+RUN apk add perl
 
 ENTRYPOINT ["sh", "/scripts/main"]
