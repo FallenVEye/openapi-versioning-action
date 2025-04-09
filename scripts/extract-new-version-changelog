@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 new_version_strategy="$(grep -Po "(?<=### new_version=)(major|minor|patch)$" ./changelog.md)"
 
