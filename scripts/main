@@ -14,13 +14,13 @@ if [[ ! -f "$spec_file" ]]; then
 fi
 
 
-new_version_strategy="$($script_dir/extract-new-version-changelog)" || exit 1
+new_version_strategy="$(bash $script_dir/extract-new-version-changelog)" || exit 1
 
 if ! $snapshot; then
-    new_version="$($script_dir/openapi-update-version --version="${new_version_strategy}" --spec="${spec_file}")" || exit 1
+    new_version="$(bash $script_dir/openapi-update-version --version="${new_version_strategy}" --spec="${spec_file}")" || exit 1
     $script_dir/update-changelog-version --version="${new_version}" || exit 1
 else
-    new_version="$($script_dir/openapi-update-version --version="${new_version_strategy}" --snapshot --spec="${spec_file}")" || exit 1 
+    new_version="$(bash $script_dir/openapi-update-version --version="${new_version_strategy}" --snapshot --spec="${spec_file}")" || exit 1 
 fi
 
 echo "${new_version}"
