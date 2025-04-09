@@ -3,5 +3,5 @@
 # Extract current branch name
 # feature/some/task-12 -> some-task-12
 
-git branch --show-current | perl -0ne 'print $& if m{feature/\K.*}s ' | sed -E "s#/#-#g"
+git branch --show-current | perl -0ne 'print $& if m{feature/\K.*}s ' | sed -E "s#/|_#-#g"
 
