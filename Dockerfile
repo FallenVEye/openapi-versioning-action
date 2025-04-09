@@ -2,4 +2,4 @@ FROM alpine:latest
 
 COPY scripts/ scripts/
 
-ENTRYPOINT ["pwd"]
+ENTRYPOINT ["sh", "/scripts/main"]
