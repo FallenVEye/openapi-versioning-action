@@ -9,7 +9,7 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 # Extract changelog
-changelog=$(grep -Pzo "(?<=### new_version).*\n\K(.|\n)*(?=\n### new_version_end)" ./changelog.md)
+changelog=$(perl -0ne 'print $& if m{### new_version=(minor|major|patch)\n\K.*\S+.*\n(?=### new_version_end)}s' changelog.md)
 changelog="## ${version}\n${changelog}"
 
 # Remove changelog entry container

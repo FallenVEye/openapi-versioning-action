@@ -31,7 +31,8 @@ if [[ -z "$version" ]]; then
 fi
 
 # Reading current version from specification file
-IFS='.' read -ra VER <<< `grep -Po "(?<=version: )\d+(\.(\d+))*" ${spec_file}`
+IFS='.' read -ra VER <<< `perl -0ne 'print $& if m{version: \K\d+(\.(\d+))*}s' ${spec_file}`
+
 
 if [[ -z "$VER" ]]; then
     echo "Version not found in spec file"
