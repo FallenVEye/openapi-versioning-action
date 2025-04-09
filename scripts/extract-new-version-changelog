@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 new_version_strategy=$(perl -ne 'print "$1" if m{### new_version=\K(major|minor|patch)$}' changelog.md)
 changelog=$(perl -0ne 'print $& if m{### new_version=(minor|major|patch)\n\K.*\S+.*\n(?=### new_version_end)}s' changelog.md)

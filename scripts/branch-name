@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Extract current branch name
 # feature/some/task-12 -> some-task-12
