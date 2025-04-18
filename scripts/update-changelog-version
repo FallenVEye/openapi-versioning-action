@@ -2,18 +2,13 @@
 
 version=$1
 
+container="### new_version=major|minor|patch\n\n### new_version_end\n"
+
 # Extract changelog
-changelog=$(perl -0ne 'print $& if m{### new_version=(minor|major|patch)\n\K.*\S+.*\n(?=### new_version_end)}s' changelog.md)
+changelog="$(sed -nE "/new_version=/,/new_version_end/p" changelog.md | tail -n +2 | head -n -1)"
 changelog="## ${version}\n${changelog}"
-
-# Remove changelog entry container
-sed -i -E "/### new_version/,/### new_version_end/d" ./changelog.md
-
 # Add new version change log
-sed -i  "1s/^/${changelog}\n/" ./changelog.md
 
-# Add container for future versions
-container="### new_version=major|minor|patch\n\n### new_version_end\n\n"
-sed -i "1s/^/${container}/" ./changelog.md
+echo "$(echo -e "$container" ; echo -e "$changelog" ; sed -E "/### new_version/,/### new_version_end/d" ./changelog.md)" > ./changelog.md.new
 
-exit 0
+mv ./changelog.md{.new,}
