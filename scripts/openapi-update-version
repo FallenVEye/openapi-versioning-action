@@ -39,6 +39,7 @@ esac
 if $snapshot; then
     branch="$(bash $script_dir/branch-name)" || (>2& echo "can't determine new version" && exit 1)
     time="$(date +"%d-%m-%H-%M")"
+    echo $branch
     new_version="${new_version}-SNAPSHOT-${branch}-${time}"
 fi
 
